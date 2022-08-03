@@ -8,8 +8,11 @@ class PlayGame():
         self.__rules = GameRules()
         self._plays = FillSpots()
 
-    def play_game(self):
-        pass
+    def _play_game(self) -> None:
+        while not self._end_game():
+            game = self._plays()
 
-
+    def _end_game(self):
+        while not(self.__rules._win_game() or self.__rules._draw_game()):
+            return False
 

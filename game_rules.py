@@ -15,7 +15,6 @@ class GameRules():
         for row in self._matrix:
             sum_row = sum(row)
             if sum_row == 3 or sum_row == -3:
-                self.define_winner(sum_row)
                 return True
         return False
     
@@ -26,7 +25,6 @@ class GameRules():
         for index, row in enumerate(transpose_matrix):
             sum_col = sum(row)
             if sum_col == 3 or sum_col == -3:
-                self.define_winner(sum_col)
                 print(f"Won by column {index+1}")
                 return True
         return False
@@ -35,7 +33,6 @@ class GameRules():
         # self._matrix = self._matrix_diag_desc
         diagonal_sum = sum(self._matrix[i][i] for i in range(len(self._matrix)))
         if diagonal_sum == 3 or diagonal_sum == -3:
-            self._define_winner(diagonal_sum)
             return True
         return False
     
@@ -44,13 +41,13 @@ class GameRules():
         self._matrix.reverse()
         reverse_diagonal_sum = sum(self._matrix[i][i] for i in range(len(self._matrix)))
         if reverse_diagonal_sum == 3 or reverse_diagonal_sum == -3:
-            self._define_winner(reverse_diagonal_sum)
             return True
         return False
     
-    def _win_game(self) -> bool:
+    def _win_game(self, player) -> bool:
         while not(self._win_game_by_line()|self._win_game_by_col()|self._win_game_by_diagonal_asc()|self._win_game_by_diagonal_asc()):
             return False
+        self.__define_winner(player)
         return True
     
     def _draw_game(self) -> bool:
@@ -59,8 +56,8 @@ class GameRules():
         else:
             return False
         
-    def _define_winner(self, sum:int) -> None:
-        if sum > 0:
+    def __define_winner(self, player:int) -> None:
+        if player % 2 == 0:
             print("Player 2 win!")
         else:
             print("Player 1 win!")
