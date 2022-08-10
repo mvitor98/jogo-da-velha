@@ -24,7 +24,7 @@ class Matrix:
                 -1: ' O '
             }
             for index, row in enumerate(self._matrix, 1):
-                print(index, blank_space,"  |".join("  "*(3-len(str(sub_item[i])))+str(sub_item[i]) for i in row), "\n")
+                print(index, blank_space," |".join(" "*( 4 - len( str( sub_item[i] ) ) ) + str(sub_item[i]) for i in row), "\n")
         else:
             for index, row in enumerate(self._matrix, 1):
                 print(index, blank_space,"  |".join(" "*(3-len(str(i)))+str(i) for i in row), "\n")
