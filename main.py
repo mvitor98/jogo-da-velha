@@ -36,8 +36,8 @@ def play_again() -> bool:
         answer = input("Deseja jogar novamente (S/N)? ->  ").upper()
         while answer not in ["S", "N"]:
             answer = input("Deseja jogar novamente (S/N)? ->  ").upper()
-        dict = {"S": True, "N": False}
-        return dict[answer]
+        options = {"S": True, "N": False}
+        return options[answer]
     
 if __name__ == "__main__":
     start_game()
