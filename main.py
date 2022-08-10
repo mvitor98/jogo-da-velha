@@ -1,20 +1,48 @@
-from numpy import transpose
+import os
+from time import sleep
+from play_game import PlayGame
+from random import choice
 
-matrix = [[1,0,0], [0,1,0], [0,0,1]]
 
-for row in matrix: print(row)
-print(40*"-")
+def select_player() -> int:
+    player = choice([0, 1])
+    return int(player)
 
-transposed_matrix = transpose(matrix).tolist()
-transposed_matrix2 = transpose(transposed_matrix).tolist()
-# for row in transposed_matrix: print(row)
-# print(40*"-")
-# for row in transposed_matrix2: print(row)
-# print(type(transpose_matrix))
-# print(type(transpose_matrix()))
-
-# for a, b in enumerate(matrix):
-#     print(a, " - ",b)
-
-matrix_r =matrix.reverse()
-for row in matrix_r : print(row)
+def start_game():
+    os.system('cls')
+    sleep(0.4)
+    print("Iniciando o Jogo da Velha...")
+    sleep(1.5)
+    os.system('cls')
+    game = PlayGame()
+    game.show_board(sub=True)
+    player = game.player
+    while not game._win_game() and not game._draw_game():
+        if player % 2 == 0:
+            print(f"Vez do jogador {player}")
+            game._mark_spot_player()
+            sleep(0.5)
+            player = game.change_player()
+        else:
+            print(f"Vez do jogador {player}")
+            game._mark_spot_cpu()
+            sleep(0.5)
+            player = game.change_player()
+    game.game_over()
+    game.define_winner()
+    
+    
+def play_again() -> bool:
+        answer = input("Deseja jogar novamente (S/N)? ->  ").upper()
+        while answer not in ["S", "N"]:
+            answer = input("Deseja jogar novamente (S/N)? ->  ").upper()
+        dict = {"S": True, "N": False}
+        return dict[answer]
+    
+if __name__ == "__main__":
+    start_game()
+    jogar_novamente = play_again()
+    while jogar_novamente:
+        start_game()
+        jogar_novamente = play_again()
+        

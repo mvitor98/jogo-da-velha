@@ -6,19 +6,26 @@ class GameRules(FillSpots):
     def __init__(self) -> None:
         super().__init__()
         self.__matrix = self._matrix
+        self._validate_player = 0
         # self._matrix_col = [[0, 0, -1], [0, 0, -1], [0, 0, -1]]
         # self._matrix_line = [[-1, -1, -1], [0, 0, -1], [0, 0, -1]]
         # self._matrix_diag_asc = [[0, 0, -1], [0, -1, 0], [-1, 0, 0]]
         # self._matrix_diag_desc = [[-1, 0, 0], [0, -1, 0], [0, 0, -1]]
         # self._matrix = [[-1, -1, 1], [-1, 1, -1], [-1, -1, 1]]
         
+    def __define_winner(self, result:int) -> None:
+        if result > 0:
+            self._validate_player= 1
+        else:
+            self._validate_player = -1    
+        
     def _win_game_by_line(self) -> bool:
         # self._matrix = self._matrix_line
         for index, row in enumerate(self.__matrix):
             sum_row = sum(row)
-            if sum_row == 3 or sum_row == -3:
-                print(f"Won by line {index}")
-                self._show_matrix()
+            if sum_row in [-3, 3]:
+                print(f"Won by line {index + 1}!")
+                self.__define_winner(sum_row)
                 return True
         return False
     
@@ -27,51 +34,57 @@ class GameRules(FillSpots):
         transpose_matrix = transpose(self.__matrix).tolist()
         for index, row in enumerate(transpose_matrix):
             sum_col = sum(row)
-            if sum_col == 3 or sum_col == -3:
-                print(f"Won by column {index+1}")
-                self._show_matrix()
+            if sum_col in [-3, 3]:
+                print(f"Won by column {index + 1}!")
+                self.__define_winner(sum_col)
                 return True
         return False
         
-    def _win_game_by_diagonal_asc(self) -> bool:
+    def _win_game_by_diagonal_desc(self) -> bool:
         # self._matrix = self._matrix_diag_desc
-        diagonal_sum = sum(self.__matrix[i][i] for i in range(len(self.__matrix)))
-        if diagonal_sum == 3 or diagonal_sum == -3:
-            self._show_matrix()
+        sum_diagonal = sum(self.__matrix[i][i] for i in range(len(self.__matrix)))
+        if sum_diagonal in [-3, 3]:
+            print("Won by descendent diagonal!")
+            self.__define_winner(sum_diagonal)
             return True
         return False
     
-    def _win_game_by_diagonal_desc(self) -> bool:
+    def _win_game_by_diagonal_asc(self) -> bool:
         # self._matrix = self._matrix_diag_asc
         self.__matrix.reverse()
-        reverse_diagonal_sum = sum(self.__matrix[i][i] for i in range(len(self.__matrix)))
-        if reverse_diagonal_sum == 3 or reverse_diagonal_sum == -3:
-            self._show_matrix()
+        sum_reverse_diagonal = sum(self.__matrix[i][i] for i in range(len(self.__matrix)))
+        if sum_reverse_diagonal in [-3, 3]:
+            print("Won by ascendent diagonal")
+            self.__define_winner(sum_reverse_diagonal)
             return True
         return False
     
     def _win_game(self) -> bool:
-        while not(self._win_game_by_line()|self._win_game_by_col()|self._win_game_by_diagonal_asc()|self._win_game_by_diagonal_asc()):
-            return False
-        return True
-    
-    def _draw_game(self) -> bool:
-        if not self._win_game():
+        if (self._win_game_by_line()|
+            self._win_game_by_col()|
+            self._win_game_by_diagonal_asc()|
+            self._win_game_by_diagonal_asc()):
             return True
         else:
             return False
-        
-    def _end_game(self) -> bool:
-        while not self._win_game() or not self._draw_game():
+    
+    def _draw_game(self) -> bool:
+        if not self._win_game() and self.count_empty_spots() > 0:
             return False
-        return True
-        
+        else:
+            print("Draw! Try again...")
+            return True     
+            
     
 if __name__ == '__main__':
-    # rules._show_matrix()
-    # print(rules.transpose_matrix())
-    # print(f"Column win: {rules.win_game_by_col()}")
-    # print(f"Diagonal ASC: {rules.win_game_by_diagonal_asc()}")
-    # print(f"Diagonal DESC: {rules.win_game_by_diagonal_desc()}")
-    pass
-    
+    jogo = GameRules()
+    player = 0
+    play_game = True
+    while play_game:
+        if player % 2 == 0:
+            jogo._mark_spot_player()
+            jogo._show_matrix()
+            player = (player+1)%2
+        else:
+            jogo._mark_spot_cpu()
+            player = (player+1)%2

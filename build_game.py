@@ -1,3 +1,5 @@
+import os
+from time import sleep
 
 class Matrix:
     
@@ -10,16 +12,25 @@ class Matrix:
     
     def __build_matrix(self) -> list:
         return list(self.__build_matrix_line() for i in range(self._spots))
-    
-    def _show_matrix(self) -> None:
+
+    def show_board(self, sub:bool=False) -> None:
+        os.system('cls')
         blank_space = " "*3
         print(blank_space+'     1     2     3\n')
-        for index, row in enumerate(self._matrix, 1):
-            print(index, blank_space,"  |".join(" "*(3-len(str(i)))+str(i) for i in row), "\n")
-
+        if sub:
+            sub_item = {
+                 0: '   ',
+                 1: ' X ',
+                -1: ' O '
+            }
+            for index, row in enumerate(self._matrix, 1):
+                print(index, blank_space,"  |".join("  "*(3-len(str(sub_item[i])))+str(sub_item[i]) for i in row), "\n")
+        else:
+            for index, row in enumerate(self._matrix, 1):
+                print(index, blank_space,"  |".join(" "*(3-len(str(i)))+str(i) for i in row), "\n")
 
 if __name__ == "__main__":
     jogo = Matrix()
-    jogo._show_matrix()
+    jogo.show_board()
     # print(len(jogo._matrix))
     
