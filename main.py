@@ -1,48 +1,54 @@
 import os
 from time import sleep
 from play_game import PlayGame
-from random import choice
 
-
-def select_player() -> int:
-    player = choice([0, 1])
-    return int(player)
-
-def start_game():
-    os.system('cls')
-    sleep(0.4)
-    print("Iniciando o Jogo da Velha...")
-    sleep(1.5)
-    os.system('cls')
-    game = PlayGame()
-    game.show_board(sub=True)
-    player = game.player
-    while not game._win_game() and not game._draw_game():
-        if player % 2 == 0:
-            print(f"Vez do jogador {player}")
-            game._mark_spot_player()
-            sleep(0.5)
-            player = game.change_player()
+class StartGame(PlayGame):
+    def __init__(self) -> None:
+        super().__init__()
+        self.__points_x, self.__points_o = 0, 0
+    
+    def start_game(self) -> None:
+        os.system('cls')
+        sleep(0.4)
+        print("Iniciando o Jogo da Velha...")
+        sleep(1.5)
+        os.system('cls')
+        self.show_board(sub=True)
+        while not self._win_game() and not self._draw_game():
+            if self.player % 2 == 0:
+                print(f"Vez do jogador X")
+                self._mark_spot_player()
+                sleep(0.5)
+                self.change_player()
+            else:
+                print(f"Vez do jogador O")
+                self._mark_spot_cpu()
+                sleep(0.5)
+                self.change_player()
+        self.game_over()
+        
+    def mark_players_points(self) -> None:
+        if self.define_winner() % 2 == 0:
+            self.__points_x += 1
         else:
-            print(f"Vez do jogador {player}")
-            game._mark_spot_cpu()
-            sleep(0.5)
-            player = game.change_player()
-    game.game_over()
-    game.define_winner()
-    
-    
-def play_again() -> bool:
+            self.__points_o += 1
+        
+    def play_again(self) -> bool:
         answer = input("Deseja jogar novamente (S/N)? ->  ").upper()
         while answer not in ["S", "N"]:
             answer = input("Deseja jogar novamente (S/N)? ->  ").upper()
         options = {"S": True, "N": False}
         return options[answer]
     
+    @property
+    def players_points(self) -> str:
+        return f"Pontos X: {self.__points_x}\nPontos O: {self.__points_o}"
+
 if __name__ == "__main__":
-    start_game()
-    jogar_novamente = play_again()
+    game = StartGame()
+    game.start_game()
+    jogar_novamente = game.play_again()
     while jogar_novamente:
-        start_game()
-        jogar_novamente = play_again()
+        game.start_game()
+        jogar_novamente = game.play_again()
         
