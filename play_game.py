@@ -1,25 +1,26 @@
 from game_rules import GameRules
-
+from random import choice
 
 class PlayGame(GameRules):
     
     def __init__(self) -> None:
         super().__init__()
-        self.player = 0
+        self.player = choice([0, 1])
     
-    def game_over(self) -> bool:
+    def game_over(self) -> None:
+        self.define_winner()
         print("Fim do jogo!\n")
     
-    def define_winner(self) -> None:
+    def define_winner(self) -> int:
         if self._validate_player > 0:
             print("Player X win!\n")
+            return 0
         else:
             print("Player O win!\n")
+            return 1
     
     def change_player(self) -> int:
         self.player = (self.player + 1) % 2
-        return self.player
-
                
 
 if __name__ == "__main__":
