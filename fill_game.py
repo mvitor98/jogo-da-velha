@@ -17,11 +17,13 @@ class FillSpots(Matrix):
     def _mark_spot_player(self) -> None:
         row, pos = self.__verify_player_play()
         self._matrix[row][pos] = 1
+        print(f"Posições escolidas: ({row}, {pos})")
         self.show_board(sub=True)
             
     def _mark_spot_cpu(self) -> None:
         row, pos = self.__verify_cpu_play()
         self._matrix[row][pos] = -1
+        print(f"Posições escolidas: ({row}, {pos})")
         self.show_board(sub=True)
         
     def __ask_coordinates(self) -> tuple:
@@ -31,23 +33,27 @@ class FillSpots(Matrix):
             while int(row) < 1 or int(row) > 3 or int(row) < 1 or int(pos) > 3:
                 print(f"Posições inválidas. Digite APENAS números entre 1 e 3.")
                 row, pos = self.__ask_coordinates()
+                print(f"Posições escolidas: ({row}, {pos})")
         except ValueError:
             print("Valor informado inválido. Digite APENAS números entre 1 e 3.")
             print(f"Posições inválidas. Digite APENAS números entre 1 e 3.")
             row, pos = self.__ask_coordinates()
+            print(f"Posições escolidas: ({row}, {pos})")
+            row += 1
+            pos += 1
         return int(row)-1, int(pos)-1
     
     def __chose_spot(self) -> tuple:
         row = choice(list(range(len(self._matrix))))
         pos = choice(list(range(self._spots)))
-        return row, pos
+        return (row, pos)
 
-    def __verify_player_play(self) -> bool:
+    def __verify_player_play(self) -> tuple:
         row, pos = self.__ask_coordinates()
-        while self._matrix[row][pos] == 1 or self._matrix[row][pos] == -1:
+        while self._matrix[row][pos] in [1, -1]:
             print(f"Ponto ({row+1},{pos+1}) ja á está preenchido!")
             row, pos = self.__ask_coordinates()
-        return int(row), int(pos) 
+        return (int(row), int(pos))
     
     def __verify_cpu_play(self):
         row, pos = self.__chose_spot()
