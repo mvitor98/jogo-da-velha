@@ -5,12 +5,11 @@ from play_game import PlayGame
 class StartGame(PlayGame):
     def __init__(self) -> None:
         super().__init__()
-        self.__points_x, self.__points_o = 0, 0
-    
+            
     def start_game(self) -> None:
         os.system('cls')
         sleep(0.4)
-        print("Iniciando o Jogo da Velha...")
+        print("Iniciando o Jogo...")
         sleep(1.5)
         os.system('cls')
         self.show_board(sub=True)
@@ -27,28 +26,19 @@ class StartGame(PlayGame):
                 self.change_player()
         self.game_over()
         
-    def mark_players_points(self) -> None:
-        if self.define_winner() % 2 == 0:
-            self.__points_x += 1
-        else:
-            self.__points_o += 1
-        
     def play_again(self) -> bool:
         answer = input("Deseja jogar novamente (S/N)? ->  ").upper()
         while answer not in ["S", "N"]:
             answer = input("Deseja jogar novamente (S/N)? ->  ").upper()
         options = {"S": True, "N": False}
         return options[answer]
-    
-    @property
-    def players_points(self) -> str:
-        return f"Pontos X: {self.__points_x}\nPontos O: {self.__points_o}"
 
 if __name__ == "__main__":
     game = StartGame()
     game.start_game()
     jogar_novamente = game.play_again()
     while jogar_novamente:
+        game = StartGame()
         game.start_game()
         jogar_novamente = game.play_again()
         
